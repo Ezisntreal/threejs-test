@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { Timer } from 'three/addons/misc/Timer.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
+import gsap from 'gsap';
+import { POSITION_BOX } from "./lib/const"
 
 const gui = new GUI()
 
@@ -310,6 +312,25 @@ const mouse = new THREE.Vector2();
 
 window.addEventListener('mousemove', onMouseMove, false);
 
+// window.addEventListener( 'click', () => {
+//         // Tính toán vị trí chuột
+//     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+//     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+//     // Cập nhật raycaster
+//     raycaster.setFromCamera(mouse, camera);
+//     checkClickIntersects(tunnelLeft, "hầm trái")
+//     checkClickIntersects(tunnelRight, "hầm phải")
+//     checkClickIntersects(tunnelCenter, "hầm giữa")
+// }, false );
+
+function checkClickIntersects(geo, pos) {
+    const intersects = raycaster.intersectObjects([geo]);
+    if (intersects.length > 0) {
+        alert("vị trí click " + pos)
+    }
+}
+
 window.addEventListener("dblclick", function (event) {
     // Tính toán vị trí chuột
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -317,15 +338,24 @@ window.addEventListener("dblclick", function (event) {
 
     // Cập nhật raycaster
     raycaster.setFromCamera(mouse, camera);
-    checkDoubleIntersects(tunnelLeft, "hầm trái")
-    checkDoubleIntersects(tunnelRight, "hầm phải")
-    checkDoubleIntersects(tunnelCenter, "hầm giữa")
+    checkDoubleIntersects(tunnelLeft, "left")
+    checkDoubleIntersects(tunnelRight, "right")
+    checkDoubleIntersects(tunnelCenter, "center")
 });
 
-function checkDoubleIntersects(geo, pos) {
+function checkDoubleIntersects(geo, code) {
     const intersects = raycaster.intersectObjects([geo]);
     if (intersects.length > 0) {
-        alert("vị trí dbclick " + pos)
+        const pos = POSITION_BOX[code]
+        if(!pos) return
+        gsap.to(camera.position, {
+            x: pos.x,
+            y: pos.y,
+            z: pos.z,
+            duration: 2, // thời gian 2 giây
+            ease: "power2.inOut",
+            onUpdate: () => controls.update()
+        });
     }
 }
 
