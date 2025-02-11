@@ -17,3 +17,14 @@ body
     left: 0;
     outline: none;
 }
+table {
+    border-collapse: collapse;
+    width: 200px;
+    background: white;
+    border: 1px solid black;
+}
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+}

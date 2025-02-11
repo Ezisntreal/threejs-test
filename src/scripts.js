@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import GUI from 'lil-gui'
 import gsap from 'gsap';
 import { POSITION_BOX } from "./lib/const"
+import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
 const gui = new GUI()
-
 // Canvas
 const canvas = document.querySelector('canvas.webgl');
 
@@ -23,7 +23,7 @@ const textureLoader = new THREE.TextureLoader()
 
 //sphere
 const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(0.1, 32, 32),
+    new THREE.SphereGeometry(0.2, 32, 32),
     new THREE.MeshStandardMaterial({ roughness: 0.7, color: 'red' })
 )
 sphere.position.x = 1.55
@@ -31,12 +31,42 @@ sphere.position.y = 1.95
 sphere.position.z = 8
 group.add(sphere)
 
-let currentColorIndex = 0;
+const sphere2 = new THREE.Mesh(
+    new THREE.SphereGeometry(0.2, 32, 32),
+    new THREE.MeshStandardMaterial({ roughness: 0.7, color: 'red' })
+)
+sphere2.position.x = -1.55
+sphere2.position.y = 1.8
+sphere2.position.z = -10
+group.add(sphere2)
 
+const sphere3 = new THREE.Mesh(
+    new THREE.SphereGeometry(0.2, 32, 32),
+    new THREE.MeshStandardMaterial({ roughness: 0.7, color: 'red' })
+)
+sphere3.position.x = 2
+sphere3.position.y = 0.3
+sphere3.position.z = 1
+group.add(sphere3)
+
+const sphere4 = new THREE.Mesh(
+    new THREE.BoxGeometry(0.4, 0.2, 0.6),
+    new THREE.MeshStandardMaterial({ roughness: 0.7, color: 'red' })
+)
+sphere4.position.x = 0
+sphere4.position.y = 2.65
+sphere4.position.z = 0
+group.add(sphere4)
+
+
+
+let currentColorIndex = 0;
 setInterval(() => {
     let colorWarning = "green"
     if (currentColorIndex % 2) colorWarning = "red"
     sphere.material.color.set(colorWarning);
+    sphere2.material.color.set(colorWarning);
+    sphere3.material.color.set(colorWarning);
     currentColorIndex += 1
 }, 700); // 3000 milliseconds = 3 seconds
 
@@ -312,22 +342,32 @@ const mouse = new THREE.Vector2();
 
 window.addEventListener('mousemove', onMouseMove, false);
 
-// window.addEventListener( 'click', () => {
-//         // Tính toán vị trí chuột
-//     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-//     mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+window.addEventListener('click', () => {
+    // Tính toán vị trí chuột
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-//     // Cập nhật raycaster
-//     raycaster.setFromCamera(mouse, camera);
-//     checkClickIntersects(tunnelLeft, "hầm trái")
-//     checkClickIntersects(tunnelRight, "hầm phải")
-//     checkClickIntersects(tunnelCenter, "hầm giữa")
-// }, false );
+    // Cập nhật raycaster
+    raycaster.setFromCamera(mouse, camera);
+    checkSensorIntersects(sphere, 1)
+    checkSensorIntersects(sphere2, 2)
+    checkSensorIntersects(sphere3, 3)
+    checkSensorIntersects(sphere4, 4)
+    checkCloseTable(xButton)
+}, false);
 
-function checkClickIntersects(geo, pos) {
+function checkCloseTable(geo) {
     const intersects = raycaster.intersectObjects([geo]);
     if (intersects.length > 0) {
-        alert("vị trí click " + pos)
+        geo.visible = false
+        tableMesh.visible = false
+    }
+}
+
+function checkSensorIntersects(geo, pos) {
+    const intersects = raycaster.intersectObjects([geo]);
+    if (intersects.length > 0) {
+        alert("click cam bien so " + pos)
     }
 }
 
@@ -343,11 +383,12 @@ window.addEventListener("dblclick", function (event) {
     checkDoubleIntersects(tunnelCenter, "center")
 });
 
+
 function checkDoubleIntersects(geo, code) {
     const intersects = raycaster.intersectObjects([geo]);
     if (intersects.length > 0) {
         const pos = POSITION_BOX[code]
-        if(!pos) return
+        if (!pos) return
         gsap.to(camera.position, {
             x: pos.x,
             y: pos.y,
@@ -356,6 +397,27 @@ function checkDoubleIntersects(geo, code) {
             ease: "power2.inOut",
             onUpdate: () => controls.update()
         });
+        tableMesh.visible = true
+        tableMesh.scale.set(0, 0, 0)
+        tableMesh.position.set(pos.xTable, pos.yTable, pos.zTable)
+
+        xButton.visible = true
+        xButton.scale.set(0, 0, 0)
+        xButton.position.set(pos.xButton, pos.yButton, pos.zButton)
+        if(pos.rotation) {
+            tableMesh.rotation.x = Math.PI * pos.rotation
+            tableMesh.rotation.z = Math.PI * pos.rotation
+            xButton.rotation.x = Math.PI * pos.rotation
+            xButton.rotation.z = Math.PI * pos.rotation
+        } else {
+            tableMesh.rotation.x = 0
+            tableMesh.rotation.z = 0
+            xButton.rotation.x = 0
+            xButton.rotation.z = 0
+        }
+        gsap.to(tableMesh.scale, { x: 1, y: 1, z: 1, duration: 1.5 });
+        gsap.to(xButton.scale, { x: 1, y: 1, z: 1, duration: 2 });
+        // tableMesh.position.set(pos.xTable, pos.yTable, pos.zTable)
     }
 }
 
@@ -364,6 +426,7 @@ function checkIntersects(geo) {
     if (intersects.length > 0) {
         // Thay đổi màu
         intersects[0].object.material.color.set(0x00ff00); // Màu xanh lá cây
+
     } else {
         // Trả về màu ban đầu
         geo.material.color.set(0xffffff);
@@ -412,6 +475,81 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+function createTableTexture() {
+    const tableCanvas = document.createElement('canvas');
+    tableCanvas.width = 620;
+    tableCanvas.height = 256;
+    const ctx = tableCanvas.getContext('2d');
+
+    // Vẽ nền
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, tableCanvas.width, tableCanvas.height);
+
+    // Vẽ viền bảng
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, tableCanvas.width, tableCanvas.height);
+
+    // Dữ liệu bảng
+    const data = [
+        ["", "", "", ""],
+        ["Thời gian", "RB1", "RB2", "RB3"],
+        ["10:00", "-1.84 MPa", "0.96 MPa", "-1.34 MPa"],
+        ["09:30", "-1.84 MPa", "0.96 MPa", "-1.34 MPa"],
+        ["09:00", "-1.84 MPa", "0.96 MPa", "-1.34 MPa"],
+        ["08:30", "-1.84 MPa", "0.96 MPa", "-1.34 MPa"]
+    ];
+
+    // Vẽ bảng
+    ctx.fillStyle = 'black';
+    ctx.font = '20px Arial';
+    const rowHeight = 40;
+    const colWidth = tableCanvas.width / data[0].length;
+    ctx.strokeRect(0, 0, 620, 40);
+    ctx.fillText("Hầm trái", 240, 30)
+
+    for (let row = 1; row < data.length; row++) {
+        for (let col = 0; col < data[row].length; col++) {
+            ctx.strokeRect(col * colWidth, row * rowHeight, colWidth, rowHeight);
+            ctx.fillText(data[row][col], col * colWidth + 20, row * rowHeight + 30);
+        }
+    }
+
+    return new THREE.CanvasTexture(tableCanvas);
+}
+
+const tableTexture = createTableTexture();
+const planeGeometry = new THREE.PlaneGeometry(4, 2);
+const planeMaterial = new THREE.MeshBasicMaterial({ map: tableTexture, side: THREE.DoubleSide });
+const tableMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+// tableMesh.position.x = 6.5
+// tableMesh.position.y = 4
+// tableMesh.position.z = -8.5
+
+scene.add(tableMesh)
+tableMesh.visible = false
+
+
+//
+const xButton = new THREE.Group()
+const geometry0 = new THREE.PlaneGeometry(0.3, 0.3);
+const mesh0 = new THREE.Mesh(geometry0, new THREE.MeshBasicMaterial({ color: "white", side: THREE.DoubleSide }));
+mesh0.position.z = -0.01
+xButton.add(mesh0);
+
+const geometry1 = new THREE.PlaneGeometry(0.2, 0.02);
+const mesh1 = new THREE.Mesh(geometry1, new THREE.MeshStandardMaterial({ color: 0xff0000, side: THREE.DoubleSide }));
+mesh1.rotation.z = Math.PI / 4;
+xButton.add(mesh1);
+
+const geometry2 = new THREE.PlaneGeometry(0.2, 0.02);
+const mesh2 = new THREE.Mesh(geometry2, new THREE.MeshStandardMaterial({ color: 0xff0000, side: THREE.DoubleSide }));
+mesh2.rotation.z = -Math.PI / 4;
+xButton.add(mesh2);
+group.add(xButton);
+xButton.visible = false
+
+//
 const timer = new Timer()
 
 const tick = () => {
@@ -422,7 +560,6 @@ const tick = () => {
     updateCameraPosition()
     // helper.update();
     renderer.render(scene, camera)
-
     window.requestAnimationFrame(tick)
 }
 
