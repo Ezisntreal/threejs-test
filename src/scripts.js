@@ -367,8 +367,8 @@ camera.position.y = 8
 camera.position.z = 1
 scene.add(camera)
 
-const helper = new THREE.CameraHelper(camera);
-group.add(helper)
+// const helper = new THREE.CameraHelper(camera);
+// group.add(helper)
 
 //control
 const controls = new OrbitControls(camera, canvas)
@@ -390,7 +390,7 @@ const tick = () => {
     controls.update()
 
     updateCameraPosition()
-    helper.update();
+    // helper.update();
     renderer.render(scene, camera)
 
     window.requestAnimationFrame(tick)
