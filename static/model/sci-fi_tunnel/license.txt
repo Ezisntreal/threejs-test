@@ -1,0 +1,11 @@
+Model Information:
+* title:	Sci-Fi Tunnel
+* source:	https://sketchfab.com/3d-models/sci-fi-tunnel-43876f4fbef247098d2b5686bb421388
+* author:	Mery (https://sketchfab.com/mery3d)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Sci-Fi Tunnel" (https://sketchfab.com/3d-models/sci-fi-tunnel-43876f4fbef247098d2b5686bb421388) by Mery (https://sketchfab.com/mery3d) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

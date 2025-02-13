@@ -5,6 +5,8 @@ import GUI from 'lil-gui'
 import gsap from 'gsap';
 import { POSITION_BOX } from "./lib/const"
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 const gui = new GUI()
 // Canvas
@@ -16,10 +18,63 @@ const scene = new THREE.Scene();
 const group = new THREE.Group()
 scene.add(group)
 
+//
+const dracoLoader = new DRACOLoader();
+dracoLoader.setDecoderPath('./draco/');
+
 // Textures
 
 const textureLoader = new THREE.TextureLoader()
 
+//
+const model = new GLTFLoader();
+model.setDRACOLoader(dracoLoader);
+
+model.load('./model/tree_small_02_1k.gltf/tree_small_02_1k.gltf', (gltf) => {
+    const tree = gltf.scene;
+    tree.position.set(4, 0, -10);
+    tree.scale.set(0.5, 0.5, 0.5);
+    group.add(tree);
+}, undefined, (error) => {
+    console.error('Error loading model tree:', error);
+});
+
+model.load('./model/mighty_oak_trees/scene.gltf', (gltf) => {
+    const trees = gltf.scene;
+    trees.position.set(4, 0, 6);
+    trees.scale.set(0.02, 0.02, 0.02);
+    group.add(trees);
+}, undefined, (error) => {
+    console.error('Error loading trees:', error);
+});
+
+model.load('./model/factory/scene.gltf', (gltf) => {
+    const factory = gltf.scene;
+    factory.position.set(-7, 0, -10);
+    factory.scale.set(1.5, 2, 2);
+    group.add(factory);
+}, undefined, (error) => {
+    console.error('Error loading factory:', error);
+});
+
+model.load('./model/abandoned_factory/scene.gltf', (gltf) => {
+    const factory2 = gltf.scene;
+    factory2.position.set(6, 0, 9);
+    factory2.rotation.y = Math.PI * 1.5
+    factory2.scale.set(0.04, 0.04, 0.04);
+    group.add(factory2);
+}, undefined, (error) => {
+    console.error('Error loading factory2:', error);
+});
+
+// model.load('./model/sci-fi_tunnel/scene.gltf', (gltf) => {
+//     const tunnel = gltf.scene;
+//     tunnel.position.set(6, 0, 9);
+//     tunnel.scale.set(0.04, 0.04, 0.04);
+//     group.add(tunnel);
+// }, undefined, (error) => {
+//     console.error('Error loading tunnel:', error);
+// });
 
 //sphere
 const sphere = new THREE.Mesh(
@@ -130,35 +185,74 @@ group.add(directionalLight)
 // group.add(directionalLightCameraHelper)
 
 // House container
-const tunnelColorTexture = textureLoader.load('./tunnel/brick_wall_04_diff_1k.jpg')
-const tunnelARMTexture = textureLoader.load('./tunnel/brick_wall_04_arm_1k.jpg')
-const tunnelNormalTexture = textureLoader.load('./tunnel/brick_wall_04_nor_gl_1k.jpg')
-const tunnelDisplacementTexture = textureLoader.load('./tunnel/brick_wall_04_disp_1k.jpg')
+// const tunnelColorTexture = textureLoader.load('./tunnel/brick_wall_04_diff_1k.jpg')
+// const tunnelARMTexture = textureLoader.load('./tunnel/brick_wall_04_arm_1k.jpg')
+// const tunnelNormalTexture = textureLoader.load('./tunnel/brick_wall_04_nor_gl_1k.jpg')
+// const tunnelDisplacementTexture = textureLoader.load('./tunnel/brick_wall_04_disp_1k.jpg')
 
-const tunnel2ColorTexture = textureLoader.load('./textures/mixed_stone_tiles_diff_1k.jpg')
-const tunnel2ARMTexture = textureLoader.load('./textures/mixed_stone_tiles_arm_1k.jpg')
-const tunnel2NormalTexture = textureLoader.load('./textures/mixed_stone_tiles_nor_gl_1k.jpg')
-const tunnel2DisplacementTexture = textureLoader.load('./textures/mixed_stone_tiles_disp_1k.jpg')
+// const tunnel2ColorTexture = textureLoader.load('./textures/mixed_stone_tiles_diff_1k.jpg')
+// const tunnel2ARMTexture = textureLoader.load('./textures/mixed_stone_tiles_arm_1k.jpg')
+// const tunnel2NormalTexture = textureLoader.load('./textures/mixed_stone_tiles_nor_gl_1k.jpg')
+// const tunnel2DisplacementTexture = textureLoader.load('./textures/mixed_stone_tiles_disp_1k.jpg')
 
-const tunnel3ColorTexture = textureLoader.load('./textures2/rubber_tiles_diff_1k.jpg')
-const tunnel3ARMTexture = textureLoader.load('./textures2/rubber_tiles_arm_1k.jpg')
-const tunnel3NormalTexture = textureLoader.load('./textures2/rubber_tiles_nor_gl_1k.jpg')
+const tunnel2ColorTexture = textureLoader.load('./textures3/rusty_metal_grid_diff_1k.jpg')
+const tunnel2ARMTexture = textureLoader.load('./textures3/rusty_metal_grid_arm_1k.jpg')
+const tunnel2NormalTexture = textureLoader.load('./textures3/rusty_metal_grid_nor_gl_1k.jpg')
+const tunnel2DisplacementTexture = textureLoader.load('./textures3/rusty_metal_grid_disp_1k.jpg')
+
+const tunnel1ColorTexture = textureLoader.load('./textures3/rusty_metal_grid_diff_1k.jpg')
+const tunnel1ARMTexture = textureLoader.load('./textures3/rusty_metal_grid_arm_1k.jpg')
+const tunnel1NormalTexture = textureLoader.load('./textures3/rusty_metal_grid_nor_gl_1k.jpg')
+const tunnel1DisplacementTexture = textureLoader.load('./textures3/rusty_metal_grid_disp_1k.jpg')
 
 
-tunnel3ColorTexture.repeat.set(8, 8)
-tunnel3ARMTexture.repeat.set(8, 8)
-tunnel3NormalTexture.repeat.set(8, 8)
-tunnel2DisplacementTexture.repeat.set(8, 8)
 
-tunnel3ColorTexture.wrapS = THREE.RepeatWrapping
-tunnel3ARMTexture.wrapS = THREE.RepeatWrapping
-tunnel3NormalTexture.wrapS = THREE.RepeatWrapping
+// const tunnel3ColorTexture = textureLoader.load('./textures2/rubber_tiles_diff_1k.jpg')
+// const tunnel3ARMTexture = textureLoader.load('./textures2/rubber_tiles_arm_1k.jpg')
+// const tunnel3NormalTexture = textureLoader.load('./textures2/rubber_tiles_nor_gl_1k.jpg')
+
+
+// tunnel3ColorTexture.repeat.set(8, 8)
+// tunnel3ARMTexture.repeat.set(8, 8)
+// tunnel3NormalTexture.repeat.set(8, 8)
+tunnel1ColorTexture.repeat.set(9.5, 9)
+tunnel1ARMTexture.repeat.set(9, 9)
+tunnel1NormalTexture.repeat.set(9, 9)
+tunnel1DisplacementTexture.repeat.set(9, 9)
+
+tunnel1ColorTexture.wrapS = THREE.RepeatWrapping
+tunnel1ARMTexture.wrapS = THREE.RepeatWrapping
+tunnel1NormalTexture.wrapS = THREE.RepeatWrapping
+tunnel1DisplacementTexture.wrapS = THREE.RepeatWrapping
+
+tunnel1ColorTexture.wrapT = THREE.RepeatWrapping
+tunnel1ARMTexture.wrapT = THREE.RepeatWrapping
+tunnel1NormalTexture.wrapT = THREE.RepeatWrapping
+tunnel1DisplacementTexture.wrapT = THREE.RepeatWrapping
+
+tunnel2ColorTexture.repeat.set(16, 16)
+tunnel2ARMTexture.repeat.set(16, 16)
+tunnel2NormalTexture.repeat.set(16, 16)
+tunnel2DisplacementTexture.repeat.set(16, 16)
+
+tunnel2ColorTexture.wrapS = THREE.RepeatWrapping
+tunnel2ARMTexture.wrapS = THREE.RepeatWrapping
+tunnel2NormalTexture.wrapS = THREE.RepeatWrapping
 tunnel2DisplacementTexture.wrapS = THREE.RepeatWrapping
 
-tunnel3ColorTexture.wrapT = THREE.RepeatWrapping
-tunnel3ARMTexture.wrapT = THREE.RepeatWrapping
-tunnel3NormalTexture.wrapT = THREE.RepeatWrapping
+tunnel2ColorTexture.wrapT = THREE.RepeatWrapping
+tunnel2ARMTexture.wrapT = THREE.RepeatWrapping
+tunnel2NormalTexture.wrapT = THREE.RepeatWrapping
 tunnel2DisplacementTexture.wrapT = THREE.RepeatWrapping
+// tunnel3ColorTexture.wrapS = THREE.RepeatWrapping
+// tunnel3ARMTexture.wrapS = THREE.RepeatWrapping
+// tunnel3NormalTexture.wrapS = THREE.RepeatWrapping
+
+// tunnel3ColorTexture.wrapT = THREE.RepeatWrapping
+// tunnel3ARMTexture.wrapT = THREE.RepeatWrapping
+// tunnel3NormalTexture.wrapT = THREE.RepeatWrapping
+
+
 // tunnelColorTexture.rotation = Math.PI / 2
 // tunnelARMTexture.rotation = Math.PI * 0.5
 // tunnelNormalTexture.rotation = Math.PI * 0.5
@@ -169,20 +263,20 @@ tunnel2DisplacementTexture.wrapT = THREE.RepeatWrapping
 // tunnelNormalTexture.center.set(0.5, 0.5);
 // tunnelDisplacementTexture.center.set(0.5, 0.5);
 
-tunnelColorTexture.repeat.set(2, 2)
-tunnelARMTexture.repeat.set(2, 2)
-tunnelNormalTexture.repeat.set(2, 2)
-tunnelDisplacementTexture.repeat.set(2, 2)
+// tunnelColorTexture.repeat.set(2, 2)
+// tunnelARMTexture.repeat.set(2, 2)
+// tunnelNormalTexture.repeat.set(2, 2)
+// tunnelDisplacementTexture.repeat.set(2, 2)
 
-tunnelColorTexture.wrapS = THREE.RepeatWrapping
-tunnelARMTexture.wrapS = THREE.RepeatWrapping
-tunnelNormalTexture.wrapS = THREE.RepeatWrapping
-tunnelDisplacementTexture.wrapS = THREE.RepeatWrapping
+// tunnelColorTexture.wrapS = THREE.RepeatWrapping
+// tunnelARMTexture.wrapS = THREE.RepeatWrapping
+// tunnelNormalTexture.wrapS = THREE.RepeatWrapping
+// tunnelDisplacementTexture.wrapS = THREE.RepeatWrapping
 
-tunnelColorTexture.wrapT = THREE.RepeatWrapping
-tunnelARMTexture.wrapT = THREE.RepeatWrapping
-tunnelNormalTexture.wrapT = THREE.RepeatWrapping
-tunnelDisplacementTexture.wrapT = THREE.RepeatWrapping
+// tunnelColorTexture.wrapT = THREE.RepeatWrapping
+// tunnelARMTexture.wrapT = THREE.RepeatWrapping
+// tunnelNormalTexture.wrapT = THREE.RepeatWrapping
+// tunnelDisplacementTexture.wrapT = THREE.RepeatWrapping
 
 // const boxLeft = new THREE.Mesh(
 //     new THREE.BoxGeometry(6, 2.7, 2),
@@ -192,23 +286,23 @@ tunnelDisplacementTexture.wrapT = THREE.RepeatWrapping
 // boxLeft.position.z = 11
 // group.add(boxLeft)
 
-const boxRight = new THREE.Mesh(
-    new THREE.BoxGeometry(6, 2.7, 4),
-    new THREE.MeshStandardMaterial({
-        side: THREE.DoubleSide,
-        transparent: true,
-        // map: tunnelColorTexture,
-        // aoMap: tunnelARMTexture,
-        // roughnessMap: tunnelARMTexture,
-        // metalnessMap: tunnelARMTexture,
-        // normalMap: tunnelNormalTexture,
+// const boxRight = new THREE.Mesh(
+//     new THREE.BoxGeometry(6, 2.7, 4),
+//     new THREE.MeshStandardMaterial({
+//         side: THREE.DoubleSide,
+//         transparent: true,
+//         // map: tunnelColorTexture,
+//         // aoMap: tunnelARMTexture,
+//         // roughnessMap: tunnelARMTexture,
+//         // metalnessMap: tunnelARMTexture,
+//         // normalMap: tunnelNormalTexture,
 
-    })
-)
-boxRight.position.y = 1.35
-boxRight.position.x = -6
-boxRight.position.z = -12
-group.add(boxRight)
+//     })
+// )
+// boxRight.position.y = 1.35
+// boxRight.position.x = -6
+// boxRight.position.z = -12
+// group.add(boxRight)
 
 const cylinderParams = {
     height: 10,
@@ -224,16 +318,16 @@ const tunnelLeft = new THREE.Mesh(
         side: THREE.DoubleSide,
         transparent: true,
         //displacementMap: tunnelDisplacementTexture,
-        // map: tunnel3ColorTexture,
-        // aoMap: tunnel3ARMTexture,
-        // roughnessMap: tunnel3ARMTexture,
-        // metalnessMap: tunnel3ARMTexture,
-        // normalMap: tunnel3NormalTexture,
+        map: tunnel2ColorTexture,
+        aoMap: tunnel2ARMTexture,
+        roughnessMap: tunnel2ARMTexture,
+        metalnessMap: tunnel2ARMTexture,
+        normalMap: tunnel2NormalTexture,
     })
 )
 tunnelLeft.rotation.x = Math.PI * 0.5
 tunnelLeft.position.y = Math.PI * 0.2
-tunnelLeft.position.z = 7
+tunnelLeft.position.z = 7.5
 group.add(tunnelLeft)
 
 const tunnelLeft2 = new THREE.Mesh(
@@ -246,7 +340,7 @@ const tunnelLeft2 = new THREE.Mesh(
 )
 tunnelLeft2.rotation.x = Math.PI * 0.5
 tunnelLeft2.position.y = Math.PI * 0.2
-tunnelLeft2.position.z = 7
+tunnelLeft2.position.z = 7.5
 group.add(tunnelLeft2)
 
 
@@ -267,12 +361,19 @@ const tunnelRight = new THREE.Mesh(
     new THREE.MeshStandardMaterial({
         roughness: 0.8,
         metalness: 0.8,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
+        transparent: true,
+        //displacementMap: tunnel2DisplacementTexture,
+        map: tunnel2ColorTexture,
+        aoMap: tunnel2ARMTexture,
+        roughnessMap: tunnel2ARMTexture,
+        metalnessMap: tunnel2ARMTexture,
+        normalMap: tunnel2NormalTexture,
     })
 )
 tunnelRight.rotation.x = Math.PI * 0.5
 tunnelRight.position.y = Math.PI * 0.2
-tunnelRight.position.z = -7
+tunnelRight.position.z = -7.5
 group.add(tunnelRight)
 
 const tunnelRight2 = new THREE.Mesh(
@@ -285,15 +386,27 @@ const tunnelRight2 = new THREE.Mesh(
 )
 tunnelRight2.rotation.x = Math.PI * 0.5
 tunnelRight2.position.y = Math.PI * 0.2
-tunnelRight2.position.z = -7
+tunnelRight2.position.z = -7.5
 group.add(tunnelRight2)
 
+// tunnel2ColorTexture.repeat.set(4, 4)
+// tunnel2ARMTexture.repeat.set(4, 4)
+// tunnel2NormalTexture.repeat.set(4, 4)
+// tunnel2DisplacementTexture.repeat.set(4, 4)
+
 const tunnelCenter = new THREE.Mesh(
-    new THREE.CylinderGeometry(cylinderParams.radius, cylinderParams.radius, 4, cylinderParams.segments, 1, true, Math.PI * 0.4, Math.PI * 1.2),
+    new THREE.CylinderGeometry(cylinderParams.radius, cylinderParams.radius, 5, cylinderParams.segments, 1, true, Math.PI * 0.4, Math.PI * 1.2),
     new THREE.MeshStandardMaterial({
         roughness: 0.8,
         metalness: 0.8,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
+        transparent: true,
+        //displacementMap: tunnelDisplacementTexture,
+        map: tunnel1ColorTexture,
+        aoMap: tunnel1ARMTexture,
+        roughnessMap: tunnel1ARMTexture,
+        metalnessMap: tunnel1ARMTexture,
+        normalMap: tunnel1NormalTexture,
     })
 )
 tunnelCenter.rotation.x = Math.PI * 0.5
@@ -301,7 +414,7 @@ tunnelCenter.position.y = Math.PI * 0.2
 group.add(tunnelCenter)
 
 const tunnelCenter2 = new THREE.Mesh(
-    new THREE.CylinderGeometry(cylinderParams.radius - 0.1, cylinderParams.radius - 0.1, 4, cylinderParams.segments, 1, true, Math.PI * 0.4, Math.PI * 1.2),
+    new THREE.CylinderGeometry(cylinderParams.radius - 0.1, cylinderParams.radius - 0.1, 5, cylinderParams.segments, 1, true, Math.PI * 0.4, Math.PI * 1.2),
     new THREE.MeshStandardMaterial({
         roughness: 0.8,
         metalness: 0.8,
@@ -404,7 +517,7 @@ function checkDoubleIntersects(geo, code) {
         xButton.visible = true
         xButton.scale.set(0, 0, 0)
         xButton.position.set(pos.xButton, pos.yButton, pos.zButton)
-        if(pos.rotation) {
+        if (pos.rotation) {
             tableMesh.rotation.x = Math.PI * pos.rotation
             tableMesh.rotation.z = Math.PI * pos.rotation
             xButton.rotation.x = Math.PI * pos.rotation
@@ -557,7 +670,7 @@ const tick = () => {
 
     controls.update()
 
-    updateCameraPosition()
+    //updateCameraPosition()
     // helper.update();
     renderer.render(scene, camera)
     window.requestAnimationFrame(tick)
@@ -580,12 +693,12 @@ window.addEventListener('keydown', (event) => (keyState[event.code] = true));
 window.addEventListener('keyup', (event) => (keyState[event.code] = false));
 const keyState = {};
 
-function updateCameraPosition() {
-    const speed = 0.2;
-    if (keyState['ArrowUp']) group.position.x += speed;
-    if (keyState['ArrowDown']) group.position.x -= speed;
-    if (keyState['ArrowLeft']) group.position.z -= speed;
-    if (keyState['ArrowRight']) group.position.z += speed;
-}
+// function updateCameraPosition() {
+//     const speed = 0.2;
+//     if (keyState['ArrowUp']) group.position.x += speed;
+//     if (keyState['ArrowDown']) group.position.x -= speed;
+//     if (keyState['ArrowLeft']) group.position.z -= speed;
+//     if (keyState['ArrowRight']) group.position.z += speed;
+// }
 
 tick()

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Factory
+* source:	https://sketchfab.com/3d-models/factory-4b62e51b1cb94094ae631d634a6e6530
+* author:	amandhiman46 (https://sketchfab.com/amandhiman46)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Factory" (https://sketchfab.com/3d-models/factory-4b62e51b1cb94094ae631d634a6e6530) by amandhiman46 (https://sketchfab.com/amandhiman46) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
